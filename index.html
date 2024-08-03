@@ -170,7 +170,6 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 		}
 		
 		grist.onRecords(async function(records, mapping) {
-			console.log(records);
 			const mapped = grist.mapColumnNames(records);
     
     		// Create a sunburst plot in the given holder element.
@@ -213,11 +212,14 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
     			var config = {responsive: true};
     			Plotly.newPlot(holder, data, layout, config);
     			holder.on('plotly_sunburstclick', function (evt){
-    				console.log(evt);
-    				for(var i = 0; i < evt.points.length; i++) {
-    					console.log('plotly_sunburstclick: clicked point index ' + 
-    								evt.points[i].pointNumber + ' (' + evt.points[i].label + ')');
-    				}
+    				// console.log(evt);
+    				// for(var i = 0; i < evt.points.length; i++) {
+    				// 	console.log('plotly_sunburstclick: clicked point index ' + 
+    				// 				evt.points[i].pointNumber + ' (' + evt.points[i].label + ')');
+    				// }
+					console.log([evt.points.length, evt.points[0].pointNumber,
+    							 records.id[evt.points[0].pointNumber],
+    		evt.points[0].label, records.Team_Hierarchy_Hierarchy[evt.points[0].pointNumber]]);
     				grist.setCursorPos({rowId: records.id[evt.points[0].pointNumber]});
     			});
     		}
@@ -228,7 +230,6 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
         		const labels = mapped.Hierarchy.map((h) => h[h.length - 1].replace(
     				/(?![^\n]{1,28}$)([^\n]{1,28})\s/g, '$1<br>'
     			));
-				console.log(labels);
         		const ids =  mapped.Hierarchy.map((h) => h.toString());
         		const parents = mapped.Hierarchy.map((h) => h.slice(0, -1).toString());
         		const sizes = mapped.Size;
