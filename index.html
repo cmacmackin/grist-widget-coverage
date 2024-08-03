@@ -218,14 +218,20 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
     				// 				evt.points[i].pointNumber + ' (' + evt.points[i].label + ')');
     				// }
 					console.log(evt.nextLevel);
-					console.log(evt.points[0]);
+					console.log(evt.points[0]);					
+					if (evt.nextLevel == null || evt.nextLevel == evt.points[0].id) {
+						console.log("Setting cursor to CLICKED item");
+    					grist.setCursorPos({rowId: records.id[evt.points[0].pointNumber]});
+					} else {
+						console.log("Setting cursor to PARENT item");
+						grist.setCursorPos({rowId: records.id[evt.points[0].ids.indexOf(evt.nextLevel)]});
+					}
 					// FIXME: How do I handle knowing whether this
     				// has been clicked going up or down? Plotly must
     				// have some way, so can use that I guess.
 					// FIXME: How do I indicate focus has shifted to a
     				// leaf? How do I shift focus away from it again?
 						
-    				grist.setCursorPos({rowId: records.id[evt.points[0].pointNumber]});
     			});
     		}
     
