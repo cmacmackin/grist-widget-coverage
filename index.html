@@ -61,6 +61,10 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
               border: 1px solid #ccc;
               border-top: none;
             }
+
+			* {
+				font-family: Liberation Sans, Helvetica, Arial, sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol;
+			}
 		</style>
     </head>
     
@@ -68,12 +72,12 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 	  <div id="navbar" class="tab charts"></div>
 
 	  <div id="tab_content"></div>
-      <div id='chart'>Waiting for data...</div>
 	  <script>
 		function percentage(num, denom) {
 			return num.map((n, i) => n / denom[i] * 100);
 		}
 
+		// Create a sunburst plot in the given holder element.
 		function make_sunburst(holder, labels, ids, parents, sizes,
 							   coverages, name) {
    			var data = [{
@@ -113,6 +117,7 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 			var config = {responsive: true};
 			holder.innerText = "";
 			const headline = document.createElement("h3");
+			headline.classList.add("chart-title");
 			const title = document.createTextNode(name);
 			headline.appendChild(title)
 			holder.appendChild(headline);
@@ -180,9 +185,9 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
         		const sizes = mapped.Size;
 
     			const contents = document.getElementById("tab_content");
+    			const navbar = document.getElementById("navbar");
     			contents.textContent = '';
 				if (mapping.Coverage.length > 1) {
-    				const navbar = document.getElementById("navbar");
     				navbar.textContent = '';
     				mapping.Coverage.forEach(function (data, i) {
     					const name = data.replace("_", " ");
@@ -195,6 +200,7 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 						const button = document.createElement("button");
 						button.classList.add("tablinks");
 						button.addEventListener('click', function (e) {changeTab(e, data);});
+						navbar.appendChild(button);
     				});
 					document.getElementById(mapping.Coverage[0]).click();
 				} else {
@@ -204,6 +210,7 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
     				contents.appendChild(holder);
     				make_sunburst(holder, labels, ids, parents, sizes,
     							  mapped.Coverage[0], name);
+					navbar.style.display = 'none';
 				}
     		} else {
 				document.getElementById('chart').innerText = "Please map all columns";
