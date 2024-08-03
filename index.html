@@ -39,10 +39,13 @@
 		});
 		grist.onRecords(async function(records, mapping) {
 			const mapped = grist.mapColumnNames(records);
+			const wrap = (s) => s.replace(
+				/(?![^\n]{1,32}$)([^\n]{1,32})\s/g, '$1\n'
+			);
 			if (mapped) {
     			var data = [{
     				type: "sunburst",
-    				labels: mapped.Hierarchy.map((h) => h[h.length - 1]),
+    				labels: mapped.Hierarchy.map((h) => wrap(h[h.length - 1])),
     				ids: mapped.Hierarchy.map((h) => h.toString()),
     				parents: mapped.Hierarchy.map((h) => h.slice(0, -1).toString()),
     				values:  mapped.Size,
