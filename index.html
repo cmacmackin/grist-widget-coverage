@@ -51,7 +51,8 @@
     				branchvalues: "total",
     				marker: {
     					"colors": percentage(mapped.Coverage, mapped.Size),
-    					"colorscale": 'RdYlGn'
+    					"colorscale": 'RdBu',
+						"showscale": true,
     				},
 					maxdepth: 2,
     			}];
@@ -62,9 +63,9 @@
     				//width: 500,
     				//height: 500
     			};
-    
+				var config = {responsive: true};
 				document.getElementById('chart').innerText = "";
-				Plotly.newPlot('chart', data, layout);
+				Plotly.newPlot('chart', data, layout, config);
 			} else {
 				document.getElementById('chart').innerText = "Please map all columns";
 				console.error("Please map all columns");
