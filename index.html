@@ -34,6 +34,14 @@
 					description: "Number of people considered 'covered' in each sector of the plot",
 					type: "Int",
 					allowMultiple: false
+				},
+				{
+					name: "Label",
+					title: "Sector labels",
+					description: "How to label each sector of the plot (defaults to last value in 'Hierarchical data')",
+					type: "Text",
+					optional: true;
+
 				}
 			]
 		});
@@ -54,7 +62,10 @@
     					"colorscale": 'RdYlGn'
     				},
     			}];
-    
+				console.log(mapped.Label);
+				console.log(mapped.Hierarchy.map((h) =>
+					h.toString()).toString());
+				console.log(mapped.Hierarchy.map((h) => h.slice(0, -1).toString()));
     			var layout = {
     				margin: {l: 0, r: 0, b: 0, t: 0}
     				// width: 500,
