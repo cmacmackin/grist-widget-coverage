@@ -10,6 +10,7 @@
     <body>
       <div id='chart'>Waiting for data...</div>
 	  <script>
+		var initialised = false;
 		function percentage(num, denom) {
 			return num.map((n, i) => n / denom[i] * 100);
 		}
@@ -64,9 +65,10 @@
     			};
     
 				document.getElementById('chart').innerText = "";
-				if (document.getElementById('chart').length == 0) {
+				if (!initialised) {
 					console.log("Creating new sunburst plot");
 					Plotly.newPlot('chart', data, layout);
+					initialised = true;
 				} else {
 					console.log("Updating sunburst plot");
 					Plotly.react('chart', data, layout);
