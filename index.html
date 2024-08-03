@@ -40,7 +40,6 @@
 		grist.onRecords(async function(records, mapping) {
 			const mapped = grist.mapColumnNames(records);
 			if (mapped) {
-				console.error("Checking this would be thrown.");
     			var data = [{
     				type: "sunburst",
     				labels: mapped.Hierarchy.map((h) => h[h.length - 1]),
@@ -66,7 +65,7 @@
 			} else {
 				console.error("Please map all columns");
 			}			
-		});
+		}, {format: "columns"});
 	  </script>
     </body>
 </html>
