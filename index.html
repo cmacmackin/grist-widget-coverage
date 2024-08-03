@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <!-- Load plotly.js into the DOM -->
+        <script src='https://cdn.plot.ly/plotly-2.34.0.min.js'></script>
+        <!-- Load Grist extension API into DOM -->
+        <script src="https://docs.getgrist.com/grist-plugin-api.js"></script>
+    </head>
+    
+    <body>
+      <div id='chart'>Waiting for data...</div>
+	  <script>
+		function percentage(num, denom) {
+			return num.map((n, i) => n / denom[i] * 100);
+		}
+		grist.ready({
+			requiredAccess: 'read table',
+			columns: [
+				{
+					name: "Hierarchy",
+					title: "Hierarchical data",
+					description: "The 'path' to each sector of the plot",
+					type: "ChoiceList,RefList"
+				},
+				{
+					name: "Size",
+					title: "Sector size",
+					description: "Number of people represented by each
+			sector of the plot",
+					type: "Int"
+				},
+				{
+					name: "Coverage",
+					title: "Sector coverage",
+					description: "Number of people considered
+			'covered' in each sector of the plot.",
+					type: "Int",
+					allowMultiple: false
+				}
+			]
+		});
+		grist.onRecords(async function(records, mapping) {
+			const mapped = grist.mapColumnNames(records);
+			var data = [{
+				type: "sunburst",
+				labels: mapped.Hierarchy.map((h) => h[h.length - 1]),
+				id: mapped.Hierarchy.map((h) => h.toString()),
+				parents: mapped.Hierarchy.map((h) h.slice(0, -1).toString()),
+				values:  mapped.Size,
+				customdata: mapped.Coverage,
+				hovertemplate: "<b>%{label}</b> <br> Employees: %{value} <br> Members: %{customdata}, %{color:.2f}%<extra></extra>",
+				branchvalues: "total",
+				marker: {
+					"colors": percentage(mapped.Coverage, mapped.Size),
+					"colorscale": 'RdYlGn'
+				},
+			}];
+
+			var layout = {
+				margin: {l: 0, r: 0, b: 0, t: 0}
+				// width: 500,
+				// height: 500
+			};
+
+			Plotly.newPlot('chart', data, layout);
+		});
+	  </script>
+    </body>
+</html>
