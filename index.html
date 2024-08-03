@@ -40,6 +40,7 @@
 		grist.onRecords(async function(records, mapping) {
 			const mapped = grist.mapColumnNames(records);
 			if (mapped) {
+				console.log(mapped);
     			var data = [{
     				type: "sunburst",
     				labels: mapped.Hierarchy.map((h) => h[h.length - 1]),
