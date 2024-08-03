@@ -24,14 +24,126 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
         <script src='https://cdn.plot.ly/plotly-2.34.0.min.js'></script>
         <!-- Load Grist extension API into DOM -->
         <script src="https://docs.getgrist.com/grist-plugin-api.js"></script>
+
+		<style>
+            /* Style the tab */
+            .tab {
+              overflow: hidden;
+              border: 1px solid #ccc;
+              background-color: #f1f1f1;
+            }
+            
+            /* Style the buttons that are used to open the tab content */
+            .tab button {
+              background-color: inherit;
+              float: left;
+              border: none;
+              outline: none;
+              cursor: pointer;
+              padding: 14px 16px;
+              transition: 0.3s;
+            }
+            
+            /* Change background color of buttons on hover */
+            .tab button:hover {
+              background-color: #ddd;
+            }
+            
+            /* Create an active/current tablink class */
+            .tab button.active {
+              background-color: #ccc;
+            }
+            
+            /* Style the tab content */
+            .tabcontent {
+              display: none;
+              padding: 6px 12px;
+              border: 1px solid #ccc;
+              border-top: none;
+            }
+		</style>
     </head>
     
     <body>
+	  <div id="navbar" class="tab charts"></div>
+
+	  <div id="tab_content"></div>
       <div id='chart'>Waiting for data...</div>
 	  <script>
 		function percentage(num, denom) {
 			return num.map((n, i) => n / denom[i] * 100);
 		}
+
+		function make_sunburst(holder, labels, ids, parents, sizes,
+							   coverages, name) {
+   			var data = [{
+   				type: "sunburst",
+   				labels: labels,
+   				ids: ids,
+   				parents: parents,
+   				values:  sizes,
+   				customdata: coverages,
+   				hovertemplate: "<b>%{label}</b> <br> Employees:
+							   %{value} <br> " + name + ": %{customdata}, %{color:.2f}%<extra></extra>",
+   				branchvalues: "total",
+   				marker: {
+   					"colors": percentage(coverages, sizes),
+   					"colorscale": [
+						["0.0", "rgb(165,0,38)"],
+						["0.1", "rgb(215,48,39)"],
+						["0.2", "rgb(244,109,67)"],
+						["0.3", "rgb(253,174,97)"],
+						["0.4", "rgb(254,224,139)"],
+						["0.5", "rgb(255,255,191)"],
+						["0.6", "rgb(217,239,139)"],
+						["0.7", "rgb(166,217,106)"],
+						["0.8", "rgb(102,189,99)"],
+						["0.9", "rgb(26,152,80)"],
+						["1.0", "rgb(0,104,55)"],
+					],
+					"showscale": true,
+    			},
+				maxdepth: 2,
+    		}];
+    		var layout = {
+    			margin: {l: 10, r: 10, b: 10, t: 10},
+				cmin: 0,
+				cmax: 100,
+    		};
+			var config = {responsive: true};
+			holder.innerText = "";
+			const headline = document.createElement("h3");
+			const title = document.createTextNode(name);
+			headline.appendChild(title)
+			holder.appendElement(headline);
+			const chart_element = document.createElement("div");
+			const chart_id = holder.id + "__chart";
+			chart_element.id = chart_id;
+			holder.appendChild(chart_element);
+			Plotly.newPlot(chart_id, data, layout, config);
+		}
+
+		function changeTab(evt, name) {
+            // Declare all variables
+            var i, tabcontent, tablinks;
+          
+            // Get all elements with class="tabcontent" and hide them
+            tabcontent = document.getElementsByClassName("tabcontent");
+            for (i = 0; i < tabcontent.length; i++) {
+              tabcontent[i].style.display = "none";
+            }
+          
+            // Get all elements with class="tablinks" and remove the class "active"
+            tablinks = document.getElementsByClassName("tablinks");
+            for (i = 0; i < tablinks.length; i++) {
+              tablinks[i].className = tablinks[i].className.replace(" active", "");
+            }
+          
+            // Show the current tab, and add an "active" class to the button that opened the tab
+            document.getElementById(name).style.display = "block";
+            evt.currentTarget.className += " active";
+        }
+
 		grist.ready({
 			requiredAccess: 'read table',
 			columns: [
@@ -56,50 +168,35 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 				},
 			]
 		});
+
 		grist.onRecords(async function(records, mapping) {
-			console.log(mapping);
 			const mapped = grist.mapColumnNames(records);
-			const wrap = (s) => s.replace(
-				/(?![^\n]{1,28}$)([^\n]{1,28})\s/g, '$1<br>'
-			);
 			if (mapped) {
-    			var data = [{
-    				type: "sunburst",
-    				labels: mapped.Hierarchy.map((h) => wrap(h[h.length - 1])),
-    				ids: mapped.Hierarchy.map((h) => h.toString()),
-    				parents: mapped.Hierarchy.map((h) => h.slice(0, -1).toString()),
-    				values:  mapped.Size,
-    				customdata: mapped.Coverage[0],
-    				hovertemplate: "<b>%{label}</b> <br> Employees: %{value} <br> Members: %{customdata}, %{color:.2f}%<extra></extra>",
-    				branchvalues: "total",
-    				marker: {
-    					"colors": percentage(mapped.Coverage[0], mapped.Size),
-    					"colorscale": [
-							["0.0", "rgb(165,0,38)"],
-							["0.1", "rgb(215,48,39)"],
-							["0.2", "rgb(244,109,67)"],
-							["0.3", "rgb(253,174,97)"],
-							["0.4", "rgb(254,224,139)"],
-							["0.5", "rgb(255,255,191)"],
-							["0.6", "rgb(217,239,139)"],
-							["0.7", "rgb(166,217,106)"],
-							["0.8", "rgb(102,189,99)"],
-							["0.9", "rgb(26,152,80)"],
-							["1.0", "rgb(0,104,55)"],
-						],
-						"showscale": true,
-    				},
-					maxdepth: 2,
-    			}];
-    			var layout = {
-    				margin: {l: 10, r: 10, b: 10, t: 10},
-					cmin: 0,
-					cmax: 100,
-    			};
-				var config = {responsive: true};
-				document.getElementById('chart').innerText = "";
-				Plotly.newPlot('chart', data, layout, config);
-			} else {
+        		const labels = mapped.Hierarchy.map((h) => h[h.length - 1].replace(
+    				/(?![^\n]{1,28}$)([^\n]{1,28})\s/g, '$1<br>'
+    			));
+        		const ids =  mapped.Hierarchy.map((h) => h.toString());
+        		const parents = mapped.Hierarchy.map((h) => h.slice(0, -1).toString());
+        		const sizes = mapped.Size;
+    
+    			const navbar = document.getElementById("navbar");
+    			const contents = document.getElementById("tab_content");
+    			navbar.textContent = '';
+    			contents.textContent = '';
+    			mapping.Coverage.foreach(function (data, i) {
+    				const name = data.replace("_", " ");
+    				const holder = document.createElement("div");
+					holder.id = data;
+					holder.classList.add("tabcontent");
+    				contents.appendChild(holder);
+    				make_sunburst(holder, labels, ids, parents, sizes,
+    							  mapped.Coverages[i], name);
+					const button = document.createElement("button");
+					button.classList.add("tablinks");
+					button.addEventListener('click', function (e) {changeTab(e, data);});
+    			});
+				document.getElementById(mapping.Coverage[0]).click();
+    		} else {
 				document.getElementById('chart').innerText = "Please map all columns";
 				console.error("Please map all columns");
 			}			
