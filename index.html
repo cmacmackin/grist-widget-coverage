@@ -67,11 +67,7 @@
     			};
     
 				document.getElementById('chart').innerText = "";
-				if (document.getElementById('chart').length == 0) {
-					Plotly.newPlot('chart', data, layout);
-				} else {
-					Plotly.react('chart', data, layout);
-				}
+				Plotly.newPlot('chart', data, layout);
 			} else {
 				document.getElementById('chart').innerText = "Please map all columns";
 				console.error("Please map all columns");
