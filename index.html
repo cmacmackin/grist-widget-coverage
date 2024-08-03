@@ -176,7 +176,7 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
     		function make_sunburst(holder, labels, ids, parents, sizes,
     							   coverages, name) {
        			var data = [{
-       				type: "sunburst",
+       				type: "icicle",
        				labels: labels,
        				ids: ids,
        				parents: parents,
@@ -211,12 +211,7 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
         		};
     			var config = {responsive: true};
     			Plotly.newPlot(holder, data, layout, config);
-    			holder.on('plotly_sunburstclick', function (evt){
-    				// console.log(evt);
-    				// for(var i = 0; i < evt.points.length; i++) {
-    				// 	console.log('plotly_sunburstclick: clicked point index ' + 
-    				// 				evt.points[i].pointNumber + ' (' + evt.points[i].label + ')');
-    				// }
+    			holder.on('plotly_icicleclick', function (evt){
 					console.log(evt.nextLevel);
 					console.log(evt.points[0]);					
 					if (evt.nextLevel == null || evt.nextLevel == evt.points[0].id) {
