@@ -51,7 +51,19 @@
     				branchvalues: "total",
     				marker: {
     					"colors": percentage(mapped.Coverage, mapped.Size),
-    					"colorscale": 'RdBu',
+    					"colorscale": [
+							["0.0", "rgb(165,0,38)"],
+							["0.1", "rgb(215,48,39)"],
+							["0.2", "rgb(244,109,67)"],
+							["0.3", "rgb(253,174,97)"],
+							["0.4", "rgb(254,224,139)"],
+							["0.5", "rgb(255,255,191)"],
+							["0.6", "rgb(217,239,139)"],
+							["0.7", "rgb(166,217,106)"],
+							["0.8", "rgb(102,189,99)"],
+							["0.9", "rgb(26,152,80)"],
+							["1.0", "rgb(0,104,55)"],
+						],
 						"showscale": true,
     				},
 					maxdepth: 2,
@@ -60,8 +72,8 @@
     				margin: {l: 10, r: 10, b: 10, t: 10},
 					cmin: 0,
 					cmax: 100,
-    				//width: 500,
-    				//height: 500
+    				width: 1000,
+    				height: 1000
     			};
 				var config = {responsive: true};
 				document.getElementById('chart').innerText = "";
