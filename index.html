@@ -10,9 +10,23 @@
     <body>
       <div id='chart'>Waiting for data...</div>
 	  <script>
-		function percentage(num, denom) {
-			return num.map((n, i) => n / denom[i] * 100);
+		function unpack(records) {
+			let labels, ids, parents, sizes, coverages, percentages;
+			recrods.forEach((record) => {
+				h = record.Hierarchy;
+				labels.push(h[h.length - 1].toString());
+				ids.push(h.toString());
+				if (h.length == 1) {
+					parents.push("");
+				} else {
+					parents.push(h.slice(0, -1).toString());
+				}
+				sizes.push(record.Size);
+				coverages.push(record.Coverage);
+				percentages.push(record.Size / record.Coverage * 100);
+			});
 		}
+		
 		grist.ready({
 			requiredAccess: 'read table',
 			columns: [
@@ -40,28 +54,26 @@
 		grist.onRecords(async function(records, mapping) {
 			const mapped = grist.mapColumnNames(records);
 			if (mapped) {
-				console.error("Checking this would be thrown.");
+				[labels, ids, parents, sizes, coverages, percentages] = unpack(mapped);
     			var data = [{
     				type: "sunburst",
-    				labels: mapped.Hierarchy.map((h) => h[h.length - 1]),
-    				id: mapped.Hierarchy.map((h) => h.toString()),
-    				parents: mapped.Hierarchy.map((h) => h.slice(0, -1).toString()),
-    				values:  mapped.Size,
-    				customdata: mapped.Coverage,
+    				labels: labels,
+    				id: ids,
+    				parents: parents,
+    				values:  sizes,
+    				customdata: coverages,
     				hovertemplate: "<b>%{label}</b> <br> Employees: %{value} <br> Members: %{customdata}, %{color:.2f}%<extra></extra>",
     				branchvalues: "total",
     				marker: {
-    					"colors": percentage(mapped.Coverage, mapped.Size),
+    					"colors": percentages,
     					"colorscale": 'RdYlGn'
     				},
     			}];
-    
     			var layout = {
     				margin: {l: 0, r: 0, b: 0, t: 0}
     				// width: 500,
     				// height: 500
     			};
-    
 				Plotly.newPlot('chart', data, layout);
 			} else {
 				console.error("Please map all columns");
