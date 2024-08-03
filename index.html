@@ -217,9 +217,17 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
     				// 	console.log('plotly_sunburstclick: clicked point index ' + 
     				// 				evt.points[i].pointNumber + ' (' + evt.points[i].label + ')');
     				// }
+					console.log(evt.nextLevel);
 					console.log([evt.points.length, evt.points[0].pointNumber,
     							 records.id[evt.points[0].pointNumber],
-    		evt.points[0].label, records.Team_Hierarchy_Hierarchy[evt.points[0].pointNumber]]);
+    		evt.points[0].label,
+    							 records.Team_Hierarchy_Hierarchy[evt.points[0].pointNumber]]);
+					// FIXME: How do I handle knowing whether this
+    				// has been clicked going up or down? Plotly must
+    				// have some way, so can use that I guess.
+					// FIXME: How do I indicate focus has shifted to a
+    				// leaf? How do I shift focus away from it again?
+						
     				grist.setCursorPos({rowId: records.id[evt.points[0].pointNumber]});
     			});
     		}
