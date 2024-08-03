@@ -205,9 +205,10 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
     				maxdepth: 2,
         		}];
         		var layout = {
-        			margin: {l: 10, r: 10, b: 10, t: 30},
+        			margin: {l: 10, r: 10, b: 10, t: 60},
     				cmin: 0,
     				cmax: 100,
+					height: 450;
         		};
     			var config = {responsive: true};
     			Plotly.newPlot(holder, data, layout, config);
@@ -230,9 +231,10 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
     
 			if (mapped) {
 				const _columns = getColumns();
-        		const labels = mapped.Hierarchy.map((h) => h[h.length - 1].replace(
-    				/(?![^\n]{1,40}$)([^\n]{1,40})\s/g, '$1<br>'
-    			));
+        		const labels = mapped.Hierarchy.map((h) => h[h.length - 1]);
+        		// const labels = mapped.Hierarchy.map((h) => h[h.length - 1].replace(
+    			// 	/(?![^\n]{1,40}$)([^\n]{1,40})\s/g, '$1<br>'
+    			// ));
         		const ids =  mapped.Hierarchy.map((h) => h.toString());
         		const parents = mapped.Hierarchy.map((h) => h.slice(0, -1).toString());
         		const sizes = mapped.Size;
