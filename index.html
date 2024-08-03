@@ -86,55 +86,6 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 			return num.map((n, i) => n / denom[i] * 100);
 		}
 
-		// Create a sunburst plot in the given holder element.
-		function make_sunburst(holder, labels, ids, parents, sizes,
-							   coverages, name) {
-   			var data = [{
-   				type: "sunburst",
-   				labels: labels,
-   				ids: ids,
-   				parents: parents,
-   				values:  sizes,
-   				customdata: coverages,
-   				hovertemplate: "<b>%{label}</b> <br> Employees: %{value} <br> " +
-					name + ": %{customdata}, %{color:.2f}%<extra></extra>",
-   				branchvalues: "total",
-   				marker: {
-   					"colors": percentage(coverages, sizes),
-   					"colorscale": [
-						["0.0", "rgb(165,0,38)"],
-						["0.1", "rgb(215,48,39)"],
-						["0.2", "rgb(244,109,67)"],
-						["0.3", "rgb(253,174,97)"],
-						["0.4", "rgb(254,224,139)"],
-						["0.5", "rgb(255,255,191)"],
-						["0.6", "rgb(217,239,139)"],
-						["0.7", "rgb(166,217,106)"],
-						["0.8", "rgb(102,189,99)"],
-						["0.9", "rgb(26,152,80)"],
-						["1.0", "rgb(0,104,55)"],
-					],
-					"showscale": true,
-    			},
-				maxdepth: 2,
-    		}];
-    		var layout = {
-    			margin: {l: 10, r: 10, b: 10, t: 10},
-				cmin: 0,
-				cmax: 100,
-    		};
-			var config = {responsive: true};
-			Plotly.newPlot(holder, data, layout, config);
-			holder.on('plotly_sunburstclick', function (evt){
-				console.log(evt);
-				for(var i = 0; i < evt.points.length; i++) {
-					console.log('plotly_sunburstclick: clicked point index ' + 
-								evt.points[i].pointNumber + ' (' + evt.points[i].label + ')');
-				}
-				grist.setCursorPos({rowId: evt.points[0].pointNumber + 1});
-			});
-		}
-
 		function changeTab(evt, name) {
             // Declare all variables
             var i, tabcontent, tablinks;
@@ -221,6 +172,57 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 		grist.onRecords(async function(records, mapping) {
 			console.log(records);
 			const mapped = grist.mapColumnNames(records);
+    
+    		// Create a sunburst plot in the given holder element.
+    		function make_sunburst(holder, labels, ids, parents, sizes,
+    							   coverages, name) {
+       			var data = [{
+       				type: "sunburst",
+       				labels: labels,
+       				ids: ids,
+       				parents: parents,
+       				values:  sizes,
+       				customdata: coverages,
+       				hovertemplate: "<b>%{label}</b> <br> Employees: %{value} <br> " +
+    					name + ": %{customdata}, %{color:.2f}%<extra></extra>",
+       				branchvalues: "total",
+       				marker: {
+       					"colors": percentage(coverages, sizes),
+       					"colorscale": [
+    						["0.0", "rgb(165,0,38)"],
+    						["0.1", "rgb(215,48,39)"],
+    						["0.2", "rgb(244,109,67)"],
+    						["0.3", "rgb(253,174,97)"],
+    						["0.4", "rgb(254,224,139)"],
+    						["0.5", "rgb(255,255,191)"],
+    						["0.6", "rgb(217,239,139)"],
+    						["0.7", "rgb(166,217,106)"],
+    						["0.8", "rgb(102,189,99)"],
+    						["0.9", "rgb(26,152,80)"],
+    						["1.0", "rgb(0,104,55)"],
+    					],
+    					"showscale": true,
+        			},
+    				maxdepth: 2,
+        		}];
+        		var layout = {
+        			margin: {l: 10, r: 10, b: 10, t: 10},
+    				cmin: 0,
+    				cmax: 100,
+        		};
+    			var config = {responsive: true};
+    			Plotly.newPlot(holder, data, layout, config);
+    			holder.on('plotly_sunburstclick', function (evt){
+    				console.log(evt);
+    				for(var i = 0; i < evt.points.length; i++) {
+    					console.log('plotly_sunburstclick: clicked point index ' + 
+    								evt.points[i].pointNumber + ' (' + evt.points[i].label + ')');
+    				}
+    				grist.setCursorPos({rowId: records.id[evt.points[0].pointNumber]});
+    			});
+    		}
+    
+    
 			if (mapped) {
 				const _columns = getColumns();
         		const labels = mapped.Hierarchy.map((h) => h[h.length - 1].replace(
