@@ -57,7 +57,14 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
             .tabcontent {
               display: none;
               padding: 6px 12px;
+			  animation: fadeEffect 1s; /* Fading effect takes 1 second */
             }
+
+			/* Go from zero to full opacity */
+			@keyframes fadeEffect {
+				from {opacity: 0;}
+				to {opacity: 1;}
+			}
 
 			* {
 				font-family: Liberation Sans, Helvetica, Arial, sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol;
@@ -191,7 +198,7 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 				if (mapping.Coverage.length > 1) {
     				navbar.textContent = '';
     				mapping.Coverage.forEach(function (data, i) {
-    					const name = data.replace("_", " ");
+    					const name = data.replace(/_/g, " ");
     					const holder = document.createElement("div");
 						holder.id = data;
 						holder.classList.add("tabcontent");
@@ -202,12 +209,13 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
     						  document.createElement("button");
 						const button_label =
     						  document.createTextNode(name);
+						button.id = data + "_button";
 						button.appendChild(button_label);
 						button.classList.add("tablinks");
 						button.addEventListener('click', function (e) {changeTab(e, data);});
 						navbar.appendChild(button);
     				});
-					document.getElementById(mapping.Coverage[0]).click();
+					document.getElementById(mapping.Coverage[0] + "_button").click();
 				} else {
 					data = mapping.Coverage[0];
     				const name = data.replace(/_/g, " ");
@@ -218,7 +226,7 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 					navbar.style.display = 'none';
 				}
     		} else {
-				document.getElementById('chart').innerText = "Please map all columns";
+				document.getElementById('tab_content').innerText = "Please map all columns";
 				console.error("Please map all columns");
 			}			
 		}, {format: "columns"});
