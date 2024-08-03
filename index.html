@@ -29,7 +29,6 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
             /* Style the tab */
             .tab {
               overflow: hidden;
-              border: 1px solid #ccc;
               background-color: #f1f1f1;
             }
             
@@ -58,12 +57,14 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
             .tabcontent {
               display: none;
               padding: 6px 12px;
-              border: 1px solid #ccc;
-              border-top: none;
             }
 
 			* {
 				font-family: Liberation Sans, Helvetica, Arial, sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol;
+			}
+
+			body {
+				margin: 0;
 			}
 		</style>
     </head>
@@ -71,7 +72,7 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
     <body>
 	  <div id="navbar" class="tab charts"></div>
 
-	  <div id="tab_content"></div>
+	  <div id="tab_content">Waiting for data...</div>
 	  <script>
 		function percentage(num, denom) {
 			return num.map((n, i) => n / denom[i] * 100);
@@ -197,7 +198,11 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
     					contents.appendChild(holder);
     					make_sunburst(holder, labels, ids, parents, sizes,
     								  mapped.Coverage[i], name);
-						const button = document.createElement("button");
+						const button =
+    						  document.createElement("button");
+						const button_label =
+    						  document.createTextNode(name);
+						button.appendChild(button_label);
 						button.classList.add("tablinks");
 						button.addEventListener('click', function (e) {changeTab(e, data);});
 						navbar.appendChild(button);
@@ -205,7 +210,7 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 					document.getElementById(mapping.Coverage[0]).click();
 				} else {
 					data = mapping.Coverage[0];
-    				const name = data.replace("_", " ");
+    				const name = data.replace(/_/g, " ");
     				const holder = document.createElement("div");
     				contents.appendChild(holder);
     				make_sunburst(holder, labels, ids, parents, sizes,
