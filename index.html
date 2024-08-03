@@ -124,11 +124,6 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
     		};
 			var config = {responsive: true};
 			holder.innerText = "";
-			const headline = document.createElement("h3");
-			headline.classList.add("chart-title");
-			const title = document.createTextNode(name);
-			headline.appendChild(title)
-			holder.appendChild(headline);
 			const chart_element = document.createElement("div");
 			const chart_id = holder.id + "__chart";
 			chart_element.id = chart_id;
