@@ -123,7 +123,7 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 				cmax: 100,
     		};
 			var config = {responsive: true};
-			Plotly.newPlot(holder_id, data, layout, config);
+			Plotly.newPlot(holder.id, data, layout, config);
 			holder.on('plotly_sunburstclick', function (evt){
 				for(var i = 0; i < evt.points.length; i++) {
 					console.log('plotly_sunburstclick: clicked point index ' + 
