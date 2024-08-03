@@ -66,8 +66,8 @@
     				height: 500
     			};
     
-				Plotly.react('chart', data, layout);
 				document.getElementById('chart').innerText = "";
+				Plotly.react('chart', data, layout);
 			} else {
 				document.getElementById('chart').innerText = "Please map all columns";
 				console.error("Please map all columns");
