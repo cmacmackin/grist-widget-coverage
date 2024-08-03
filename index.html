@@ -224,7 +224,7 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
     					grist.setCursorPos({rowId: records.id[evt.points[0].pointNumber]});
 					} else {
 						console.log("Setting cursor to PARENT item");
-						grist.setCursorPos({rowId: records.id[evt.points[0].ids.indexOf(evt.nextLevel)]});
+						grist.setCursorPos({rowId: records.id[evt.points[0].data.ids.indexOf(evt.nextLevel)]});
 					}
 					// FIXME: How do I handle knowing whether this
     				// has been clicked going up or down? Plotly must
