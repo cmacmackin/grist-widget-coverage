@@ -20,6 +20,7 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 <!DOCTYPE html>
     <html lang="en">
     <head>
+		<script src="jquery-3.7.1.min.js"></script>
         <!-- Load plotly.js into the DOM -->
         <script src='https://cdn.plot.ly/plotly-2.34.0.min.js'></script>
         <!-- Load Grist extension API into DOM -->
@@ -124,7 +125,7 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
     		};
 			var config = {responsive: true};
 			Plotly.newPlot(holder, data, layout, config);
-			holder.addEventListener('plotly_sunburstclick', function (evt){
+			holder.on('plotly_sunburstclick', function (evt){
 				for(var i = 0; i < evt.points.length; i++) {
 					console.log('plotly_sunburstclick: clicked point index ' + 
 								evt.points[i].pointNumber + ' (' + evt.points[i].label + ')');
@@ -177,6 +178,7 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 
 		grist.ready({
 			requiredAccess: 'full', // Need this in order to get column display names
+			allowSelectBy: true,
 			columns: [
 				{
 					name: "Hierarchy",
@@ -230,7 +232,6 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
     			const navbar = document.getElementById("navbar");
     			contents.textContent = '';
 				const columns = await _columns;
-				console.log(columns);
 				if (mapping.Coverage.length > 1) {
     				navbar.textContent = '';
     				mapping.Coverage.forEach(function (data, i) {
