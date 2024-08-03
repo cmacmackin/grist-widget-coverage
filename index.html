@@ -50,11 +50,11 @@
     				ids: mapped.Hierarchy.map((h) => h.toString()),
     				parents: mapped.Hierarchy.map((h) => h.slice(0, -1).toString()),
     				values:  mapped.Size,
-    				customdata: mapped.Coverage,
+    				customdata: mapped.Coverage[0],
     				hovertemplate: "<b>%{label}</b> <br> Employees: %{value} <br> Members: %{customdata}, %{color:.2f}%<extra></extra>",
     				branchvalues: "total",
     				marker: {
-    					"colors": percentage(mapped.Coverage, mapped.Size),
+    					"colors": percentage(mapped.Coverage[0], mapped.Size),
     					"colorscale": [
 							["0.0", "rgb(165,0,38)"],
 							["0.1", "rgb(215,48,39)"],
