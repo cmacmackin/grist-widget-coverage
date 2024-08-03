@@ -63,10 +63,10 @@
     
 				document.getElementById('chart').innerText = "";
 				if (document.getElementById('chart').length == 0) {
-					consol.log("Creating new sunburst plot");
+					console.log("Creating new sunburst plot");
 					Plotly.newPlot('chart', data, layout);
 				} else {
-					consol.log("Updating sunburst plot");
+					console.log("Updating sunburst plot");
 					Plotly.react('chart', data, layout);
 				}
 			} else {
