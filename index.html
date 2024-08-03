@@ -184,7 +184,7 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 				if (mapping.Coverage.length > 1) {
     				const navbar = document.getElementById("navbar");
     				navbar.textContent = '';
-    				mapping.Coverage.foreach(function (data, i) {
+    				mapping.Coverage.forEach(function (data, i) {
     					const name = data.replace("_", " ");
     					const holder = document.createElement("div");
 						holder.id = data;
