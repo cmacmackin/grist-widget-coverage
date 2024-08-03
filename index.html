@@ -159,7 +159,7 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 
 
 		// Whether a column is internal and should be hidden.
-		export function isHiddenCol(colId) {
+		function isHiddenCol(colId) {
 			return colId.startsWith('gristHelper_') || colId === 'manualSort';
 		}
 
