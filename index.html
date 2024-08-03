@@ -202,7 +202,7 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
     					],
     					"showscale": true,
         			},
-    				maxdepth: 2,
+    				maxdepth: 3,
         		}];
         		var layout = {
         			margin: {l: 10, r: 10, b: 10, t: 10},
@@ -226,9 +226,6 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 						console.log("Setting cursor to PARENT item");
 						grist.setCursorPos({rowId: records.id[evt.points[0].data.ids.indexOf(evt.nextLevel)]});
 					}
-					// FIXME: How do I handle knowing whether this
-    				// has been clicked going up or down? Plotly must
-    				// have some way, so can use that I guess.
 					// FIXME: How do I indicate focus has shifted to a
     				// leaf? How do I shift focus away from it again?
 						
