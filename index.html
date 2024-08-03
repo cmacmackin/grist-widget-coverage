@@ -83,8 +83,8 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
    				parents: parents,
    				values:  sizes,
    				customdata: coverages,
-   				hovertemplate: "<b>%{label}</b> <br> Employees:
-							   %{value} <br> " + name + ": %{customdata}, %{color:.2f}%<extra></extra>",
+   				hovertemplate: "<b>%{label}</b> <br> Employees: %{value} <br> " +
+					name + ": %{customdata}, %{color:.2f}%<extra></extra>",
    				branchvalues: "total",
    				marker: {
    					"colors": percentage(coverages, sizes),
@@ -178,24 +178,33 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
         		const ids =  mapped.Hierarchy.map((h) => h.toString());
         		const parents = mapped.Hierarchy.map((h) => h.slice(0, -1).toString());
         		const sizes = mapped.Size;
-    
-    			const navbar = document.getElementById("navbar");
+
     			const contents = document.getElementById("tab_content");
-    			navbar.textContent = '';
     			contents.textContent = '';
-    			mapping.Coverage.foreach(function (data, i) {
+				if (maping.Coverage.Length > 1) {
+    				const navbar = document.getElementById("navbar");
+    				navbar.textContent = '';
+    				mapping.Coverage.foreach(function (data, i) {
+    					const name = data.replace("_", " ");
+    					const holder = document.createElement("div");
+						holder.id = data;
+						holder.classList.add("tabcontent");
+    					contents.appendChild(holder);
+    					make_sunburst(holder, labels, ids, parents, sizes,
+    								  mapped.Coverages[i], name);
+						const button = document.createElement("button");
+						button.classList.add("tablinks");
+						button.addEventListener('click', function (e) {changeTab(e, data);});
+    				});
+					document.getElementById(mapping.Coverage[0]).click();
+				} else {
+					data = mapping.Coverage[0];
     				const name = data.replace("_", " ");
     				const holder = document.createElement("div");
-					holder.id = data;
-					holder.classList.add("tabcontent");
     				contents.appendChild(holder);
     				make_sunburst(holder, labels, ids, parents, sizes,
-    							  mapped.Coverages[i], name);
-					const button = document.createElement("button");
-					button.classList.add("tablinks");
-					button.addEventListener('click', function (e) {changeTab(e, data);});
-    			});
-				document.getElementById(mapping.Coverage[0]).click();
+    							  mapped.Coverages[0], name);
+				}
     		} else {
 				document.getElementById('chart').innerText = "Please map all columns";
 				console.error("Please map all columns");
