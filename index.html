@@ -53,7 +53,9 @@
     					"colors": percentage(mapped.Coverage, mapped.Size),
     					"colorscale": 'RdYlGn'
     				},
+					maxdepth: 2,
     			}];
+				console.log(percentage(mapped.Coverage, mapped.Size));
 				// console.log(mapped.Hierarchy.map((h) => h[h.length - 1]));
 				// console.log(mapped.Hierarchy.map((h) =>
 				// 	h.toString()));
@@ -64,8 +66,10 @@
     				height: 500
     			};
     
-				Plotly.newPlot('chart', data, layout);
+				Plotly.react('chart', data, layout);
+				document.getElementById('chart').innerText = "";
 			} else {
+				document.getElementById('chart').innerText = "Please map all columns";
 				console.error("Please map all columns");
 			}			
 		}, {format: "columns"});
