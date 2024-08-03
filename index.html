@@ -181,7 +181,7 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 
     			const contents = document.getElementById("tab_content");
     			contents.textContent = '';
-				if (mapping.Coverage.Length > 1) {
+				if (mapping.Coverage.length > 1) {
     				const navbar = document.getElementById("navbar");
     				navbar.textContent = '';
     				mapping.Coverage.foreach(function (data, i) {
@@ -203,7 +203,7 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
     				const holder = document.createElement("div");
     				contents.appendChild(holder);
     				make_sunburst(holder, labels, ids, parents, sizes,
-    							  mapped.Coverages[0], name);
+    							  mapped.Coverage[0], name);
 				}
     		} else {
 				document.getElementById('chart').innerText = "Please map all columns";
