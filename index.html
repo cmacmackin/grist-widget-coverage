@@ -157,6 +157,24 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
             evt.currentTarget.className += " active";
         }
 
+		async function getColumns() {
+            // It'd be nice if most of this logic was handled by the plugin API.
+            // Avoiding the server requests from fetchTable might be a noticeable speedup.
+            const tableId = await grist.selectedTable.getTableId();
+            const tables = await grist.docApi.fetchTable('_grist_Tables');
+            const columns = await grist.docApi.fetchTable('_grist_Tables_column');
+            const tableRef = tables.id[tables.tableId.indexOf(tableId)];
+            const columnRecords = columns.id.map((_id, i) =>
+              Object.fromEntries(Object.keys(columns).map(key => [key, columns[key][i]]))
+            );
+            return columnRecords.filter(
+				col => col.parentId === tableRef
+					&& !isHiddenCol(col.colId)
+					&& col.type !== "Attachments"
+            );
+        }
+          
+
 		grist.ready({
 			requiredAccess: 'read table',
 			columns: [
@@ -182,9 +200,23 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 			]
 		});
 
+		// TODO: Display the path/trace (incorporate into click event
+		// for selecting divisions?) 
+		// TODO: Set the selected division in grist
+		function findColumnLabel(columns, id) {
+			for (let i = 0; i < columns.length; i++) {
+				if (columns[i].colId == id) {
+					return columns[i].label;
+				}
+			}
+			return id;
+		}
+		
 		grist.onRecords(async function(records, mapping) {
 			const mapped = grist.mapColumnNames(records);
 			if (mapped) {
+				const columns = await getColumns();
+				console.log(columns);
         		const labels = mapped.Hierarchy.map((h) => h[h.length - 1].replace(
     				/(?![^\n]{1,28}$)([^\n]{1,28})\s/g, '$1<br>'
     			));
@@ -198,7 +230,7 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 				if (mapping.Coverage.length > 1) {
     				navbar.textContent = '';
     				mapping.Coverage.forEach(function (data, i) {
-    					const name = data.replace(/_/g, " ");
+    					const name = findColumnLabel(columns, data);
     					const holder = document.createElement("div");
 						holder.id = data;
 						holder.classList.add("tabcontent");
@@ -218,7 +250,7 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 					document.getElementById(mapping.Coverage[0] + "_button").click();
 				} else {
 					data = mapping.Coverage[0];
-    				const name = data.replace(/_/g, " ");
+    				const name = findColumnLabel(columns, data);
     				const holder = document.createElement("div");
     				contents.appendChild(holder);
     				make_sunburst(holder, labels, ids, parents, sizes,
