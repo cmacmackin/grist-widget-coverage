@@ -123,12 +123,13 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 				cmax: 100,
     		};
 			var config = {responsive: true};
-			holder.innerText = "";
-			const chart_element = document.createElement("div");
-			const chart_id = holder.id + "__chart";
-			chart_element.id = chart_id;
-			holder.appendChild(chart_element);
-			Plotly.newPlot(chart_id, data, layout, config);
+			Plotly.newPlot(holder_id, data, layout, config);
+			holder.on('plotly_sunburstclick', function (evt){
+				for(var i = 0; i < evt.points.length; i++) {
+					console.log('plotly_sunburstclick: clicked point index ' + 
+								evt.points[i].pointNumber + ' (' + evt.points[i].label + ')');
+				}
+			});
 		}
 
 		function changeTab(evt, name) {
@@ -202,6 +203,8 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 		// TODO: Display the path/trace (incorporate into click event
 		// for selecting divisions?) 
 		// TODO: Set the selected division in grist
+		// TODO: Allow a label other than "employees" to be used in
+		// the hovertext
 		function findColumnLabel(columns, id) {
 			for (let i = 0; i < columns.length; i++) {
 				if (columns[i].colId == id) {
@@ -218,6 +221,7 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
         		const labels = mapped.Hierarchy.map((h) => h[h.length - 1].replace(
     				/(?![^\n]{1,28}$)([^\n]{1,28})\s/g, '$1<br>'
     			));
+				console.log(labels);
         		const ids =  mapped.Hierarchy.map((h) => h.toString());
         		const parents = mapped.Hierarchy.map((h) => h.slice(0, -1).toString());
         		const sizes = mapped.Size;
