@@ -31,7 +31,7 @@
 				{
 					name: "Coverage",
 					title: "Sector coverage",
-					description: "Number of people considered 'covered' in each sector of the plot.",
+					description: "Number of people considered 'covered' in each sector of the plot",
 					type: "Int",
 					allowMultiple: false
 				}
@@ -43,7 +43,7 @@
 				type: "sunburst",
 				labels: mapped.Hierarchy.map((h) => h[h.length - 1]),
 				id: mapped.Hierarchy.map((h) => h.toString()),
-				parents: mapped.Hierarchy.map((h) h.slice(0, -1).toString()),
+				parents: mapped.Hierarchy.map((h) => h.slice(0, -1).toString()),
 				values:  mapped.Size,
 				customdata: mapped.Coverage,
 				hovertemplate: "<b>%{label}</b> <br> Employees: %{value} <br> Members: %{customdata}, %{color:.2f}%<extra></extra>",
