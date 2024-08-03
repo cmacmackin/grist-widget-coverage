@@ -157,9 +157,13 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
             evt.currentTarget.className += " active";
         }
 
+
+		// Whether a column is internal and should be hidden.
+		export function isHiddenCol(colId) {
+			return colId.startsWith('gristHelper_') || colId === 'manualSort';
+		}
+
 		async function getColumns() {
-            // It'd be nice if most of this logic was handled by the plugin API.
-            // Avoiding the server requests from fetchTable might be a noticeable speedup.
             const tableId = await grist.selectedTable.getTableId();
             const tables = await grist.docApi.fetchTable('_grist_Tables');
             const columns = await grist.docApi.fetchTable('_grist_Tables_column');
@@ -176,7 +180,7 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
           
 
 		grist.ready({
-			requiredAccess: 'read table',
+			requiredAccess: 'full', // Need this in order to get column display names
 			columns: [
 				{
 					name: "Hierarchy",
@@ -215,8 +219,7 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 		grist.onRecords(async function(records, mapping) {
 			const mapped = grist.mapColumnNames(records);
 			if (mapped) {
-				const columns = await getColumns();
-				console.log(columns);
+				const _columns = getColumns();
         		const labels = mapped.Hierarchy.map((h) => h[h.length - 1].replace(
     				/(?![^\n]{1,28}$)([^\n]{1,28})\s/g, '$1<br>'
     			));
@@ -227,6 +230,8 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
     			const contents = document.getElementById("tab_content");
     			const navbar = document.getElementById("navbar");
     			contents.textContent = '';
+				const columns = await _columns;
+				console.log(columns);
 				if (mapping.Coverage.length > 1) {
     				navbar.textContent = '';
     				mapping.Coverage.forEach(function (data, i) {
