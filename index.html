@@ -39,7 +39,6 @@
 					name: "Label",
 					title: "Sector labels",
 					description: "How to label each sector of the plot (defaults to last value in 'Hierarchical data')",
-					type: "Text",
 					optional: true
 
 				}
@@ -50,7 +49,7 @@
 			if (mapped) {
     			var data = [{
     				type: "sunburst",
-    				labels: mapped.Hierarchy.map((h) => h[h.length - 1]),
+    				labels: mapped.Hierarchy.map((h) => h.toString()),//mapped.Hierarchy.map((h) => h[h.length - 1]),
     				id: mapped.Hierarchy.map((h) => h.toString()),
     				parents: mapped.Hierarchy.map((h) => h.slice(0, -1).toString()),
     				values:  mapped.Size,
@@ -62,7 +61,7 @@
     					"colorscale": 'RdYlGn'
     				},
     			}];
-				console.log(mapped.Label);
+				console.log(mapped.Hierarchy.map((h) => h[h.length - 1]));
 				console.log(mapped.Hierarchy.map((h) =>
 					h.toString()));
 				console.log(mapped.Hierarchy.map((h) => h.slice(0, -1).toString()));
