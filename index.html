@@ -126,10 +126,12 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 			var config = {responsive: true};
 			Plotly.newPlot(holder, data, layout, config);
 			holder.on('plotly_sunburstclick', function (evt){
+				console.log('plotly sunburstclick handler invocation.');
 				for(var i = 0; i < evt.points.length; i++) {
 					console.log('plotly_sunburstclick: clicked point index ' + 
 								evt.points[i].pointNumber + ' (' + evt.points[i].label + ')');
 				}
+				grist.setCursorPos({rowId: evt.points[0].pointNumber});
 			});
 		}
 
