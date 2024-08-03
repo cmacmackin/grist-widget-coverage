@@ -38,9 +38,10 @@
 			]
 		});
 		grist.onRecords(async function(records, mapping) {
+			console.log(mapping);
 			const mapped = grist.mapColumnNames(records);
 			const wrap = (s) => s.replace(
-				/(?![^\n]{1,20}$)([^\n]{1,20})\s/g, '$1<br>'
+				/(?![^\n]{1,28}$)([^\n]{1,28})\s/g, '$1<br>'
 			);
 			if (mapped) {
     			var data = [{
