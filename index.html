@@ -219,6 +219,7 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 		}
 		
 		grist.onRecords(async function(records, mapping) {
+			console.log(records);
 			const mapped = grist.mapColumnNames(records);
 			if (mapped) {
 				const _columns = getColumns();
