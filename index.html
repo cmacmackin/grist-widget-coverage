@@ -218,10 +218,7 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
     				// 				evt.points[i].pointNumber + ' (' + evt.points[i].label + ')');
     				// }
 					console.log(evt.nextLevel);
-					console.log([evt.points.length, evt.points[0].pointNumber,
-    							 records.id[evt.points[0].pointNumber],
-    		evt.points[0].label,
-    							 records.Team_Hierarchy_Hierarchy[evt.points[0].pointNumber]]);
+					console.log(evt.points[0]);
 					// FIXME: How do I handle knowing whether this
     				// has been clicked going up or down? Plotly must
     				// have some way, so can use that I guess.
