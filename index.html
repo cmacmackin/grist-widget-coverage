@@ -206,11 +206,11 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 						orientation: 'v'
 					},
 					pathbar: {
-						textfont: {size: 130}
+						textfont: {size: 18}
 					}
         		}];
         		var layout = {
-        			margin: {l: 10, r: 10, b: 10, t: 45},
+        			margin: {l: 10, r: 10, b: 10, t: 35},
     				cmin: 0,
     				cmax: 100,
 					height: 430,
@@ -221,10 +221,8 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 					console.log(evt.nextLevel);
 					console.log(evt.points[0]);					
 					if (evt.nextLevel == null || evt.nextLevel == evt.points[0].id) {
-						console.log("Setting cursor to CLICKED item");
-    					grist.setCursorPos({rowId: records.id[evt.points[0].pointNumber]});
+						grist.setCursorPos({rowId: records.id[evt.points[0].pointNumber]});
 					} else {
-						console.log("Setting cursor to PARENT item");
 						grist.setCursorPos({rowId: records.id[evt.points[0].data.ids.indexOf(evt.nextLevel)]});
 					}
     			});
