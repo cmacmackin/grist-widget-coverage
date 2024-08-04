@@ -117,11 +117,6 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 			]
 		});
 
-		// TODO: Is there some way to sync the zoom locations of all
-		// the charts?
-
-		// Can I redraw the plot with different data?
-		
 		// TODO: Allow a label other than "employees" to be used in
 		// the hovertext
 		function findColumnLabel(columns, id) {
@@ -150,6 +145,8 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
     		const parents = mapped.Hierarchy.map((h) => h.slice(0, -1).toString());
     		const sizes = mapped.Size;
 
+			const rootID = records.id[parents.indexOf("")];
+			
 			const contents = document.getElementById("chart");
 			const navbar = document.getElementById("navbar");
 			contents.textContent = '';
@@ -212,7 +209,6 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
               
                 // Add an "active" class to the button that was clicked
                 evt.currentTarget.className += " active";
-				console.log(coverages);
     			Plotly.react(contents, plotlyData(name, coverages), layout, config);
     		}
     
@@ -227,7 +223,7 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 					grist.setCursorPos({rowId: records.id[evt.points[0].data.ids.indexOf(evt.nextLevel)]});
 				}
 			});
-			
+
 			mapping.Coverage.forEach(function (data, i) {
 				console.log(data);
 				name = findColumnLabel(columns, data);
@@ -238,10 +234,14 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 				button.id = data + "_button";
 				button.appendChild(button_label);
 				button.classList.add("tablinks");
-				button.addEventListener('click', function (e) {changePlot(e, name, mapped.Coverage[i]);});
+				button.addEventListener('click', function (e) {
+					changePlot(e, name, mapped.Coverage[i]);
+					grist.setCursorPos({rowId: rootID});
+				});
 				navbar.appendChild(button);
 			});
 			document.getElementById(mapping.Coverage[0] + "_button").classList.add("active");
+			grist.setCursorPos({rowId: rootID});
 		}, {format: "columns"});
 	  </script>
     </body>
