@@ -129,7 +129,6 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 		}
 		
 		grist.onRecords(function(records, mapping) {
-			console.log("Call to ONRECORDS callback")
 			const mapped = grist.mapColumnNames(records);
     		const _columns = getColumns();
 
@@ -152,7 +151,6 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 			const navbar = document.getElementById("navbar");
 			contents.textContent = '';
 			navbar.textContent = '';
-			console.log(navbar.childElementCount);
 
     		const layout = {
     			margin: {l: 10, r: 10, b: 10, t: 35},
@@ -226,7 +224,6 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 			});
 
 			mapping.Coverage.forEach(function (data, i) {
-				console.log(data);
 				name = findColumnLabel(columns, data);
 				const button =
 					  document.createElement("button");
