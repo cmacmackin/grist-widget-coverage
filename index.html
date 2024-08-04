@@ -58,13 +58,19 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 				margin: 0;
 				font-family: Liberation Sans, Helvetica, Arial, sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol;
 			}
+
+			.chart p {
+				margin: 20;
+			}
 		</style>
     </head>
     
     <body>
 	  <div id="navbar" class="tab charts"></div>
 
-	  <div id="chart">Waiting for data...</div>
+	  <div id="chart">
+		<p>Waiting for data...</p>
+	  </div>
 	  <script>
 		function percentage(num, denom) {
 			return num.map((n, i) => n / denom[i] * 100);
@@ -133,7 +139,7 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
     		const _columns = getColumns();
 
     		if (! mapped) {
-				document.getElementById('tab_content').innerText = "Please map all columns";
+				document.getElementById('tab_content').firstChild.innerText = "Please map all columns";
 				console.error("Please map all columns");
 				return;
 			}
@@ -160,7 +166,6 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 			const config = {responsive: true};
 
 			function plotlyData(name, coverages) {
-				console.log(name)
        			return [{
        				type: "icicle",
        				labels: labels,
