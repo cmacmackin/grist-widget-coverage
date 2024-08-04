@@ -266,6 +266,10 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 					data = mapping.Coverage[0];
     				const name = findColumnLabel(columns, data);
     				const holder = document.createElement("div");
+					const headline = document.createElement("h5");
+					const title = document.createTextNode(name);
+					headline.appendChild(title);
+					contents.appendChild(headline);
     				contents.appendChild(holder);
     				make_sunburst(holder, labels, ids, parents, sizes,
     							  mapped.Coverage[0], name);
