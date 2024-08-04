@@ -155,9 +155,8 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 			]
 		});
 
-		// TODO: Display the path/trace (incorporate into click event
-		// for selecting divisions?) 
-		// TODO: Set the selected division in grist
+		// TODO: Is there some way to sync the zoom locations of all
+		// the charts?
 		// TODO: Allow a label other than "employees" to be used in
 		// the hovertext
 		function findColumnLabel(columns, id) {
@@ -202,12 +201,12 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
     					],
     					"showscale": true,
         			},
-    				maxdepth: 4,
+    				maxdepth: 3,
 					tiling: {
 						orientation: 'v'
 					},
 					pathbar: {
-						textfont: {size: 1.3}
+						textfont: {size: 130}
 					}
         		}];
         		var layout = {
@@ -228,9 +227,6 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 						console.log("Setting cursor to PARENT item");
 						grist.setCursorPos({rowId: records.id[evt.points[0].data.ids.indexOf(evt.nextLevel)]});
 					}
-					// FIXME: How do I indicate focus has shifted to a
-    				// leaf? How do I shift focus away from it again?
-						
     			});
     		}
     
@@ -238,7 +234,7 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 			if (mapped) {
 				const _columns = getColumns();
         		const labels = mapped.Hierarchy.map((h) => h[h.length - 1].replace(
-    				/(?![^\n]{1,25}$)([^\n]{1,25})\s/g, '$1<br>'
+    				/(?![^\n]{1,20}$)([^\n]{1,20})\s/g, '$1<br>'
     			));
         		const ids =  mapped.Hierarchy.map((h) => h.toString());
         		const parents = mapped.Hierarchy.map((h) => h.slice(0, -1).toString());
