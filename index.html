@@ -164,6 +164,8 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 				autosize: true,
     		};
 			const config = {responsive: true};
+			const columns = await _columns;
+			var sizeName = findColumnLabel(columns, mapping.Size);
 
 			function plotlyData(name, coverages) {
        			return [{
@@ -173,8 +175,9 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
        				parents: parents,
        				values:  sizes,
        				customdata: coverages,
-       				hovertemplate: "<b>%{label}</b> <br> Employees: %{value} <br> " +
-    					name + ": %{customdata}, %{color:.2f}%<extra></extra>",
+       				hovertemplate: "<b>%{label}</b> <br> " + sizeName +
+       			        ": %{value} <br> " + name +
+						": %{customdata}, %{color:.2f}%<extra></extra>",
        				branchvalues: "total",
        				marker: {
        					"colors": percentage(coverages, sizes),
@@ -200,8 +203,6 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
     				},
         		}];
 			}
-
-			const columns = await _columns;
 
     		function changePlot(evt, name, coverages) {
                 // Declare all variables
