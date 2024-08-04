@@ -154,6 +154,7 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 			const navbar = document.getElementById("navbar");
 			contents.textContent = '';
 			navbar.textContent = '';
+			console.log(navbar.childElementCount);
 
     		function changePlot(evt, name, coverages) {
                 // Declare all variables
@@ -175,9 +176,7 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
            				hovertemplate: "<b>%{label}</b> <br> Employees: %{value} <br> " +
         					name + ": %{customdata}, %{color:.2f}%<extra></extra>",
            				branchvalues: "total",
-           				marker: {
-           					"colors": percentage(coverages, sizes),
-    					}
+           				"marker.colors": percentage(coverages, sizes),
     				}
     			);
     		}
