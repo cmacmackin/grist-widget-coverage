@@ -75,10 +75,10 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 			return colId.startsWith('gristHelper_') || colId === 'manualSort';
 		}
 
-		function getColumns() {
-            const tableId = grist.selectedTable.getTableId();
-            const tables = grist.docApi.fetchTable('_grist_Tables');
-            const columns = grist.docApi.fetchTable('_grist_Tables_column');
+		async function getColumns() {
+            const tableId = await grist.selectedTable.getTableId();
+            const tables = await grist.docApi.fetchTable('_grist_Tables');
+            const columns = await grist.docApi.fetchTable('_grist_Tables_column');
             const tableRef = tables.id[tables.tableId.indexOf(tableId)];
             const columnRecords = columns.id.map((_id, i) =>
               Object.fromEntries(Object.keys(columns).map(key => [key, columns[key][i]]))
@@ -128,9 +128,9 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 			return id;
 		}
 		
-		grist.onRecords(function(records, mapping) {
+		grist.onRecords(async function(records, mapping) {
 			const mapped = grist.mapColumnNames(records);
-    		const columns = getColumns();
+    		const _columns = getColumns();
 
     		if (! mapped) {
 				document.getElementById('tab_content').innerText = "Please map all columns";
@@ -150,7 +150,6 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 			const contents = document.getElementById("chart");
 			const navbar = document.getElementById("navbar");
 			contents.textContent = '';
-			navbar.textContent = '';
 
     		const layout = {
     			margin: {l: 10, r: 10, b: 10, t: 35},
@@ -197,6 +196,8 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
         		}];
 			}
 
+			const columns = await _columns;
+
     		function changePlot(evt, name, coverages) {
                 // Declare all variables
                 var i, tabcontent, tablinks;
@@ -223,6 +224,7 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 				}
 			});
 
+			navbar.textContent = '';
 			mapping.Coverage.forEach(function (data, i) {
 				name = findColumnLabel(columns, data);
 				const button =
