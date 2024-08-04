@@ -80,33 +80,11 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
     <body>
 	  <div id="navbar" class="tab charts"></div>
 
-	  <div id="tab_content">Waiting for data...</div>
+	  <div id="chart">Waiting for data...</div>
 	  <script>
 		function percentage(num, denom) {
 			return num.map((n, i) => n / denom[i] * 100);
 		}
-
-		function changeTab(evt, name) {
-            // Declare all variables
-            var i, tabcontent, tablinks;
-          
-            // Get all elements with class="tabcontent" and hide them
-            tabcontent = document.getElementsByClassName("tabcontent");
-            for (i = 0; i < tabcontent.length; i++) {
-              tabcontent[i].style.display = "none";
-            }
-          
-            // Get all elements with class="tablinks" and remove the class "active"
-            tablinks = document.getElementsByClassName("tablinks");
-            for (i = 0; i < tablinks.length; i++) {
-              tablinks[i].className = tablinks[i].className.replace(" active", "");
-            }
-          
-            // Show the current tab, and add an "active" class to the button that opened the tab
-            document.getElementById(name).style.display = "block";
-            evt.currentTarget.className += " active";
-        }
-
 
 		// Whether a column is internal and should be hidden.
 		function isHiddenCol(colId) {
@@ -157,6 +135,9 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 
 		// TODO: Is there some way to sync the zoom locations of all
 		// the charts?
+
+		// Can I redraw the plot with different data?
+		
 		// TODO: Allow a label other than "employees" to be used in
 		// the hovertext
 		function findColumnLabel(columns, id) {
@@ -170,100 +151,117 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 		
 		grist.onRecords(async function(records, mapping) {
 			const mapped = grist.mapColumnNames(records);
-    
-    		// Create a sunburst plot in the given holder element.
-    		function make_sunburst(holder, labels, ids, parents, sizes,
-    							   coverages, name) {
-       			var data = [{
-       				type: "icicle",
-       				labels: labels,
-       				ids: ids,
-       				parents: parents,
-       				values:  sizes,
-       				customdata: coverages,
-       				hovertemplate: "<b>%{label}</b> <br> Employees: %{value} <br> " +
-    					name + ": %{customdata}, %{color:.2f}%<extra></extra>",
-       				branchvalues: "total",
-       				marker: {
-       					"colors": percentage(coverages, sizes),
-       					"colorscale": [
-    						["0.0", "rgb(165,0,38)"],
-    						["0.1", "rgb(215,48,39)"],
-    						["0.2", "rgb(244,109,67)"],
-    						["0.3", "rgb(253,174,97)"],
-    						["0.4", "rgb(254,224,139)"],
-    						["0.5", "rgb(255,255,191)"],
-    						["0.6", "rgb(217,239,139)"],
-    						["0.7", "rgb(166,217,106)"],
-    						["0.8", "rgb(102,189,99)"],
-    						["0.9", "rgb(26,152,80)"],
-    						["1.0", "rgb(0,104,55)"],
-    					],
-    					"showscale": true,
-						colorbar: {ticksuffix: "%"},
-        			},
-    				maxdepth: 3,
-					tiling: {
-						orientation: 'v'
-					},
-        		}];
-        		var layout = {
-        			margin: {l: 10, r: 10, b: 10, t: 35},
-    				cmin: 0,
-    				cmax: 100,
-					autosize: true,
-	    		};
-    			var config = {responsive: true};
-    			Plotly.newPlot(holder, data, layout, config);
-    			holder.on('plotly_icicleclick', function (evt){
-					console.log(evt.nextLevel);
-					console.log(evt.points[0]);					
-					if (evt.nextLevel == null || evt.nextLevel == evt.points[0].id) {
-						grist.setCursorPos({rowId: records.id[evt.points[0].pointNumber]});
-					} else {
-						grist.setCursorPos({rowId: records.id[evt.points[0].data.ids.indexOf(evt.nextLevel)]});
-					}
-    			});
-    		}
-    
-    
-			if (mapped) {
-				const _columns = getColumns();
-        		const labels = mapped.Hierarchy.map((h) => h[h.length - 1].replace(
-    				/(?![^\n]{1,20}$)([^\n]{1,20})\s/g, '$1<br>'
-    			));
-        		const ids =  mapped.Hierarchy.map((h) => h.toString());
-        		const parents = mapped.Hierarchy.map((h) => h.slice(0, -1).toString());
-        		const sizes = mapped.Size;
+    		const _columns = getColumns();
 
-    			const contents = document.getElementById("tab_content");
-    			const navbar = document.getElementById("navbar");
-    			contents.textContent = '';
-				const columns = await _columns;
-				navbar.textContent = '';
-				mapping.Coverage.forEach(function (data, i) {
-					const name = findColumnLabel(columns, data);
-					const holder = document.createElement("div");
-					holder.id = data;
-					holder.classList.add("tabcontent");
-					contents.appendChild(holder);
-					make_sunburst(holder, labels, ids, parents, sizes,
-								  mapped.Coverage[i], name);
-					const button =
-						  document.createElement("button");
-					const button_label =
-						  document.createTextNode(name);
-					button.id = data + "_button";
-					button.appendChild(button_label);
-					button.classList.add("tablinks");
-					button.addEventListener('click', function (e) {changeTab(e, data);});
-					navbar.appendChild(button);
-				});
-				document.getElementById(mapping.Coverage[0] + "_button").click();
-    		} else {
+    		if (! mapped) {
 				document.getElementById('tab_content').innerText = "Please map all columns";
 				console.error("Please map all columns");
-			}			
+				return;
+			}
+
+    		const labels = mapped.Hierarchy.map((h) => h[h.length - 1].replace(
+				/(?![^\n]{1,20}$)([^\n]{1,20})\s/g, '$1<br>'
+			));
+    		const ids =  mapped.Hierarchy.map((h) => h.toString());
+    		const parents = mapped.Hierarchy.map((h) => h.slice(0, -1).toString());
+    		const sizes = mapped.Size;
+
+			const contents = document.getElementById("chart");
+			const navbar = document.getElementById("navbar");
+			contents.textContent = '';
+			navbar.textContent = '';
+
+    		function changePlot(evt, name, coverages) {
+                // Declare all variables
+                var i, tabcontent, tablinks;
+              
+                // Get all elements with class="tablinks" and remove the class "active"
+                tablinks = document.getElementsByClassName("tablinks");
+                for (i = 0; i < tablinks.length; i++) {
+                  tablinks[i].className = tablinks[i].className.replace(" active", "");
+                }
+              
+                // Add an "active" class to the button that was clicked
+                evt.currentTarget.className += " active";
+    			Plotly.restyle(
+    				contents,
+    				{
+           				customdata: coverages,
+           				hovertemplate: "<b>%{label}</b> <br> Employees: %{value} <br> " +
+        					name + ": %{customdata}, %{color:.2f}%<extra></extra>",
+           				branchvalues: "total",
+           				marker: {
+           					"colors": percentage(coverages, sizes),
+    					}
+    				}
+    			);
+    		}
+    
+    		const columns = await _columns;
+    		var name = findColumnLabel(columns, mapping.Coverage[0]);
+
+   			var data = [{
+   				type: "icicle",
+   				labels: labels,
+   				ids: ids,
+   				parents: parents,
+   				values:  sizes,
+   				customdata: mapped.Coverage[0],
+   				hovertemplate: "<b>%{label}</b> <br> Employees: %{value} <br> " +
+					name + ": %{customdata}, %{color:.2f}%<extra></extra>",
+   				branchvalues: "total",
+   				marker: {
+   					"colors": percentage(mapped.Coverage[0], sizes),
+   					"colorscale": [
+						["0.0", "rgb(165,0,38)"],
+						["0.1", "rgb(215,48,39)"],
+						["0.2", "rgb(244,109,67)"],
+						["0.3", "rgb(253,174,97)"],
+						["0.4", "rgb(254,224,139)"],
+						["0.5", "rgb(255,255,191)"],
+						["0.6", "rgb(217,239,139)"],
+						["0.7", "rgb(166,217,106)"],
+						["0.8", "rgb(102,189,99)"],
+						["0.9", "rgb(26,152,80)"],
+						["1.0", "rgb(0,104,55)"],
+					],
+					"showscale": true,
+					colorbar: {ticksuffix: "%"},
+    			},
+				maxdepth: 3,
+				tiling: {
+					orientation: 'v'
+				},
+    		}];
+    		var layout = {
+    			margin: {l: 10, r: 10, b: 10, t: 35},
+				cmin: 0,
+				cmax: 100,
+				autosize: true,
+    		};
+			var config = {responsive: true};
+			Plotly.newPlot(contents, data, layout, config);
+			contents.on('plotly_icicleclick', function (evt){
+				if (evt.nextLevel == null || evt.nextLevel == evt.points[0].id) {
+					grist.setCursorPos({rowId: records.id[evt.points[0].pointNumber]});
+				} else {
+					grist.setCursorPos({rowId: records.id[evt.points[0].data.ids.indexOf(evt.nextLevel)]});
+				}
+			});
+			
+			mapping.Coverage.forEach(function (data, i) {
+				name = findColumnLabel(columns, data);
+				const button =
+					  document.createElement("button");
+				const button_label =
+					  document.createTextNode(name);
+				button.id = data + "_button";
+				button.appendChild(button_label);
+				button.classList.add("tablinks");
+				button.addEventListener('click', function (e) {changePlot(e, name, mapped.Coverage[i]);});
+				navbar.appendChild(button);
+			});
+			document.getElementById(mapping.Coverage[0] + "_button").classList.add("active");
 		}, {format: "columns"});
 	  </script>
     </body>
