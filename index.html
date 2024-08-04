@@ -123,8 +123,6 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 			]
 		});
 
-		// TODO: Allow a label other than "employees" to be used in
-		// the hovertext
 		function findColumnLabel(columns, id) {
 			for (let i = 0; i < columns.length; i++) {
 				if (columns[i].colId == id) {
@@ -134,6 +132,7 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 			return id;
 		}
 		
+		// TODO: See if there is some way to use Plotly.react when redrawing.
 		grist.onRecords(async function(records, mapping) {
 			const mapped = grist.mapColumnNames(records);
     		const _columns = getColumns();
