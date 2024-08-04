@@ -241,37 +241,26 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
     			const navbar = document.getElementById("navbar");
     			contents.textContent = '';
 				const columns = await _columns;
-				if (mapping.Coverage.length > 1) {
-    				navbar.textContent = '';
-    				mapping.Coverage.forEach(function (data, i) {
-    					const name = findColumnLabel(columns, data);
-    					const holder = document.createElement("div");
-						holder.id = data;
-						holder.classList.add("tabcontent");
-    					contents.appendChild(holder);
-    					make_sunburst(holder, labels, ids, parents, sizes,
-    								  mapped.Coverage[i], name);
-						const button =
-    						  document.createElement("button");
-						const button_label =
-    						  document.createTextNode(name);
-						button.id = data + "_button";
-						button.appendChild(button_label);
-						button.classList.add("tablinks");
-						button.addEventListener('click', function (e) {changeTab(e, data);});
-						navbar.appendChild(button);
-    				});
-					document.getElementById(mapping.Coverage[0] + "_button").click();
-				} else {
-					data = mapping.Coverage[0];
-    				const name = findColumnLabel(columns, data);
-    				const holder = document.createElement("div");
-    				contents.appendChild(holder);
-    				make_sunburst(holder, labels, ids, parents, sizes,
-    							  mapped.Coverage[0], name);
-					plotly.relayout(holder, {title: {text: name}});
-					navbar.style.display = 'none';
-				}
+				navbar.textContent = '';
+				mapping.Coverage.forEach(function (data, i) {
+					const name = findColumnLabel(columns, data);
+					const holder = document.createElement("div");
+					holder.id = data;
+					holder.classList.add("tabcontent");
+					contents.appendChild(holder);
+					make_sunburst(holder, labels, ids, parents, sizes,
+								  mapped.Coverage[i], name);
+					const button =
+						  document.createElement("button");
+					const button_label =
+						  document.createTextNode(name);
+					button.id = data + "_button";
+					button.appendChild(button_label);
+					button.classList.add("tablinks");
+					button.addEventListener('click', function (e) {changeTab(e, data);});
+					navbar.appendChild(button);
+				});
+				document.getElementById(mapping.Coverage[0] + "_button").click();
     		} else {
 				document.getElementById('tab_content').innerText = "Please map all columns";
 				console.error("Please map all columns");
