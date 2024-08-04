@@ -128,7 +128,7 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 			return id;
 		}
 		
-		grist.onRecords(async function(records, mapping) {
+		grist.onRecords(function(records, mapping) {
 			console.log("Call to ONRECORDS callback")
 			const mapped = grist.mapColumnNames(records);
     		const _columns = getColumns();
