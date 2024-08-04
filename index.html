@@ -269,7 +269,7 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
     				contents.appendChild(holder);
     				make_sunburst(holder, labels, ids, parents, sizes,
     							  mapped.Coverage[0], name);
-					plotly.relayout(holder, {title: name});
+					plotly.relayout(holder, {title: {text: name}});
 					navbar.style.display = 'none';
 				}
     		} else {
