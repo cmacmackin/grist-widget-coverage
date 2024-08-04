@@ -226,7 +226,7 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 
 			navbar.textContent = '';
 			mapping.Coverage.forEach(function (data, i) {
-				name = findColumnLabel(columns, data);
+				const name = findColumnLabel(columns, data);
 				const button =
 					  document.createElement("button");
 				const button_label =
