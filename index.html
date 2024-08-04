@@ -76,9 +76,9 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 		}
 
 		function getColumns() {
-            const tableId = await grist.selectedTable.getTableId();
-            const tables = await grist.docApi.fetchTable('_grist_Tables');
-            const columns = await grist.docApi.fetchTable('_grist_Tables_column');
+            const tableId = grist.selectedTable.getTableId();
+            const tables = grist.docApi.fetchTable('_grist_Tables');
+            const columns = grist.docApi.fetchTable('_grist_Tables_column');
             const tableRef = tables.id[tables.tableId.indexOf(tableId)];
             const columnRecords = columns.id.map((_id, i) =>
               Object.fromEntries(Object.keys(columns).map(key => [key, columns[key][i]]))
