@@ -75,7 +75,7 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 			return colId.startsWith('gristHelper_') || colId === 'manualSort';
 		}
 
-		async function getColumns() {
+		function getColumns() {
             const tableId = await grist.selectedTable.getTableId();
             const tables = await grist.docApi.fetchTable('_grist_Tables');
             const columns = await grist.docApi.fetchTable('_grist_Tables_column');
@@ -130,7 +130,7 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 		
 		grist.onRecords(function(records, mapping) {
 			const mapped = grist.mapColumnNames(records);
-    		const _columns = getColumns();
+    		const columns = getColumns();
 
     		if (! mapped) {
 				document.getElementById('tab_content').innerText = "Please map all columns";
@@ -211,9 +211,8 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
                 evt.currentTarget.className += " active";
     			Plotly.react(contents, plotlyData(name, coverages), layout, config);
     		}
-    
-    		const columns = await _columns;
-    		var name = findColumnLabel(columns, mapping.Coverage[0]);
+
+			var name = findColumnLabel(columns, mapping.Coverage[0]);
 
 			Plotly.newPlot(contents, plotlyData(name, mapped.Coverage[0]), layout, config);
 			contents.on('plotly_icicleclick', function (evt){
