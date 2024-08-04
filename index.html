@@ -205,16 +205,15 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 					tiling: {
 						orientation: 'v'
 					},
-					pathbar: {
-						textfont: {size: 18}
-					}
+					// pathbar: {
+					// 	textfont: {size: 18}
+					// }
         		}];
         		var layout = {
         			margin: {l: 10, r: 10, b: 10, t: 35},
     				cmin: 0,
     				cmax: 100,
-					height: 430,
-        		};
+	    		};
     			var config = {responsive: true};
     			Plotly.newPlot(holder, data, layout, config);
     			holder.on('plotly_icicleclick', function (evt){
